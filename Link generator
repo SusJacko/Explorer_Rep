@@ -1,0 +1,31 @@
+import os
+from bs4 import BeautifulSoup
+import requests
+
+# GitHub repository information
+username = "SusJacko"
+repository = "Explorer_Rep"
+branch = "main"  # or whichever branch you want
+
+# GitHub folder path (relative to repository root)
+folder_path = "/Image"
+
+# Generate GitHub folder URL
+github_url = f"https://github.com/{username}/{repository}/tree/{branch}/{folder_path}"
+
+# Send a GET request to the GitHub folder URL
+response = requests.get(github_url)
+soup = BeautifulSoup(response.text, "html.parser")
+
+# Find all image tags in the HTML
+image_tags = soup.find_all("img")
+
+# Extract image filenames from the src attribute of each image tag
+image_filenames = [img["src"].split("/")[-1] for img in image_tags]
+
+# Generate Markdown links for each image
+markdown_links = [f"![{filename}]({github_url}/{filename})" for filename in image_filenames]
+
+# Print the Markdown links
+for link in markdown_links:
+    print(link)
